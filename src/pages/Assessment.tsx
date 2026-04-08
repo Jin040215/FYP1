@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, Brain } from 'lucide-react';
 import { questions } from '../data/questions';
 import LikertScale from '../components/ui/LikertScale';
 import ProgressBar from '../components/ui/ProgressBar';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface AssessmentProps {
   onComplete: (answers: Record<number, number>) => void;
@@ -15,6 +16,7 @@ const QUESTIONS_PER_PAGE = 5;
 export default function Assessment({ onComplete, onBack }: AssessmentProps) {
   const [currentPage, setCurrentPage] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
+  const { t, language } = useLanguage();
 
   const totalPages = Math.ceil(questions.length / QUESTIONS_PER_PAGE);
   const currentQuestions = questions.slice(
@@ -46,6 +48,12 @@ export default function Assessment({ onComplete, onBack }: AssessmentProps) {
 
   const isPageComplete = currentQuestions.every((q) => answers[q.id] !== undefined);
 
+  // Helper to get translated question text
+  const getQuestionText = (id: number, defaultText: string) => {
+    const translated = t(`questions.${id}`);
+    return translated !== `questions.${id}` ? translated : defaultText;
+  };
+
   return (
     <div className="max-w-4xl w-full mx-auto px-6 py-12">
       <ProgressBar current={Object.keys(answers).length} total={questions.length} />
@@ -67,10 +75,10 @@ export default function Assessment({ onComplete, onBack }: AssessmentProps) {
                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-50/50 rounded-full blur-3xl"></div>
                 <div className="relative z-10 flex flex-col items-center text-center">
                   <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-6">
-                    Question {currentPage * QUESTIONS_PER_PAGE + index + 1}
+                    {t('assessment.question')} {currentPage * QUESTIONS_PER_PAGE + index + 1}
                   </span>
                   <h3 className="text-xl md:text-2xl font-headline font-bold text-[#001e40] leading-snug mb-12 max-w-2xl">
-                    "{question.text}"
+                    "{getQuestionText(question.id, question.text)}"
                   </h3>
                   <LikertScale
                     value={answers[question.id]}
@@ -88,7 +96,7 @@ export default function Assessment({ onComplete, onBack }: AssessmentProps) {
             className="flex items-center gap-2 px-8 py-4 rounded-lg font-headline font-bold text-slate-500 hover:text-[#001e40] transition-all duration-200"
           >
             <ArrowLeft size={20} />
-            Back
+            {t('assessment.back')}
           </button>
           <button
             onClick={handleNext}
@@ -99,7 +107,7 @@ export default function Assessment({ onComplete, onBack }: AssessmentProps) {
                 : 'bg-slate-200 text-slate-400 cursor-not-allowed'
             }`}
           >
-            {currentPage === totalPages - 1 ? 'Finish Assessment' : 'Next Questions'}
+            {currentPage === totalPages - 1 ? t('assessment.finish') : t('assessment.next')}
             <ArrowRight size={20} />
           </button>
         </div>

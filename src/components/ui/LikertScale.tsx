@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Frown, Meh, Smile, SmilePlus, Angry } from 'lucide-react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface LikertScaleProps {
   value: number;
@@ -8,14 +9,16 @@ interface LikertScaleProps {
 }
 
 const options = [
-  { value: 1, label: 'Strongly Disagree', icon: Angry },
-  { value: 2, label: 'Disagree', icon: Frown },
-  { value: 3, label: 'Neutral', icon: Meh },
-  { value: 4, label: 'Agree', icon: Smile },
-  { value: 5, label: 'Strongly Agree', icon: SmilePlus },
+  { value: 1, icon: Angry },
+  { value: 2, icon: Frown },
+  { value: 3, icon: Meh },
+  { value: 4, icon: Smile },
+  { value: 5, icon: SmilePlus },
 ];
 
 export default function LikertScale({ value, onChange }: LikertScaleProps) {
+  const { t } = useLanguage();
+
   return (
     <div className="w-full flex flex-col md:flex-row justify-between items-center gap-8 md:gap-4 px-4">
       {options.map((option) => {
@@ -44,7 +47,7 @@ export default function LikertScale({ value, onChange }: LikertScaleProps) {
                 isActive ? 'text-[#001e40]' : 'text-slate-500 group-hover:text-blue-900'
               }`}
             >
-              {option.label}
+              {t(`assessment.options.${option.value}`)}
             </span>
           </button>
         );

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface ProgressBarProps {
   current: number;
@@ -8,16 +9,17 @@ interface ProgressBarProps {
 
 export default function ProgressBar({ current, total }: ProgressBarProps) {
   const percentage = Math.round((current / total) * 100);
+  const { t } = useLanguage();
 
   return (
     <div className="w-full space-y-4">
       <div className="flex justify-between items-end">
         <div className="space-y-1">
           <span className="text-[10px] font-semibold text-[#001e40] tracking-widest uppercase opacity-80">
-            Step {current} of {total}
+            {t('assessment.step')} {current} {t('assessment.of')} {total}
           </span>
           <h2 className="text-xl font-headline font-bold text-slate-900 tracking-tight">
-            Assessment Progress
+            {t('assessment.progressTitle')}
           </h2>
         </div>
         <span className="text-lg font-headline font-extrabold text-[#001e40]">

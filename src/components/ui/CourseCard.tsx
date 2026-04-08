@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown, ChevronUp, GraduationCap, Info } from 'lucide-react';
 import { Recommendation } from '../../types';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface CourseCardProps {
   recommendation: Recommendation;
@@ -11,6 +12,10 @@ interface CourseCardProps {
 
 export const CourseCard: React.FC<CourseCardProps> = ({ recommendation, rank, isTop }) => {
   const [isExpanded, setIsExpanded] = useState(isTop);
+  const { t } = useLanguage();
+
+  const translatedCourse = t(`courses.${recommendation.course}`);
+  const translatedCategory = t(`categories.${recommendation.category}`);
 
   return (
     <motion.div
@@ -30,15 +35,17 @@ export const CourseCard: React.FC<CourseCardProps> = ({ recommendation, rank, is
             {recommendation.matchPercentage}%
           </span>
           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-            Suitability Match
+            {t('results.match')}
           </span>
         </div>
       </div>
 
       <h3 className={`font-headline font-bold text-[#001e40] mb-1 ${isTop ? 'text-2xl' : 'text-xl'}`}>
-        {recommendation.course}
+        {translatedCourse !== `courses.${recommendation.course}` ? translatedCourse : recommendation.course}
       </h3>
-      <p className="text-sm text-slate-500 mb-6">{recommendation.category}</p>
+      <p className="text-sm text-slate-500 mb-6">
+        {translatedCategory !== `categories.${recommendation.category}` ? translatedCategory : recommendation.category}
+      </p>
 
       <div className="w-full bg-slate-100 h-1 rounded-full overflow-hidden mb-6">
         <motion.div
@@ -55,7 +62,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({ recommendation, rank, is
             className="flex items-center gap-2 text-[#001e40] font-bold text-sm hover:underline transition-all"
           >
             <Info size={16} />
-            {isExpanded ? 'Hide Matching Logic' : 'Why this fits you?'}
+            {isExpanded ? t('results.hideLogic') : t('results.whyFits')}
             {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
           </button>
 
@@ -69,25 +76,23 @@ export const CourseCard: React.FC<CourseCardProps> = ({ recommendation, rank, is
               >
                 <div className="pt-4 border-t border-slate-100 space-y-4">
                   <p className="text-sm text-slate-600 leading-relaxed italic">
-                    "Your profile suggests a strong alignment with the core requirements of this programme. 
-                    The combination of your traits makes you a natural fit for the challenges and opportunities 
-                    presented in {recommendation.course}."
+                    "{t('results.logicDesc').replace('{course}', translatedCourse !== `courses.${recommendation.course}` ? translatedCourse : recommendation.course)}"
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="p-3 bg-slate-50 rounded-lg border-l-4 border-[#001e40]">
                       <h4 className="text-[10px] font-bold text-[#001e40] uppercase tracking-tighter mb-1">
-                        Trait Synergy
+                        {t('results.traitSynergy')}
                       </h4>
                       <p className="text-xs text-slate-500">
-                        Your scores in key areas like Openness and Conscientiousness mirror the ideal profile for this field.
+                        {t('results.traitSynergyDesc')}
                       </p>
                     </div>
                     <div className="p-3 bg-slate-50 rounded-lg border-l-4 border-[#003366]">
                       <h4 className="text-[10px] font-bold text-[#001e40] uppercase tracking-tighter mb-1">
-                        Academic Potential
+                        {t('results.academicPotential')}
                       </h4>
                       <p className="text-xs text-slate-500">
-                        The methodical approach suggested by your profile is highly valued in {recommendation.category}.
+                        {t('results.academicPotentialDesc').replace('{category}', translatedCategory !== `categories.${recommendation.category}` ? translatedCategory : recommendation.category)}
                       </p>
                     </div>
                   </div>
@@ -100,3 +105,4 @@ export const CourseCard: React.FC<CourseCardProps> = ({ recommendation, rank, is
     </motion.div>
   );
 }
+

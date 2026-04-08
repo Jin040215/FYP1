@@ -14,6 +14,7 @@ import Results from './pages/Results';
 import { questions } from './data/questions';
 import { calculateScores, getRecommendations } from './lib/scoring';
 import { PersonalityScores, Recommendation, UserData } from './types';
+import { useLanguage } from './contexts/LanguageContext';
 
 type AppState = 'home' | 'assessment' | 'personal-info' | 'results';
 
@@ -23,6 +24,7 @@ export default function App() {
   const [scores, setScores] = useState<PersonalityScores | null>(null);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const { t } = useLanguage();
 
   const handleStart = () => {
     setState('assessment');
@@ -76,9 +78,9 @@ export default function App() {
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
               className="w-16 h-16 border-4 border-blue-100 border-t-[#001e40] rounded-full mb-8"
             />
-            <h2 className="text-2xl font-headline font-bold text-[#001e40] mb-4">Analyzing Your Profile</h2>
+            <h2 className="text-2xl font-headline font-bold text-[#001e40] mb-4">{t('loading.title')}</h2>
             <p className="text-slate-500 max-w-xs mx-auto leading-relaxed">
-              Our algorithm is mapping your personality traits to 18 UTS academic programmes...
+              {t('loading.desc')}
             </p>
           </div>
         ) : (
@@ -121,3 +123,4 @@ export default function App() {
     </div>
   );
 }
+

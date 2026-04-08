@@ -2,18 +2,20 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { ArrowLeft, ArrowRight, UserCircle } from 'lucide-react';
 import { UserData } from '../types';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface PersonalInfoProps {
   onComplete: (data: UserData) => void;
   onBack: () => void;
 }
 
-const qualifications = [
+const qualificationsList = [
   'SPM', 'STPM', 'Foundation', 'UEC', 'Diploma', 'Degree', 'O-Level', 'A-Level', 'Others'
 ];
 
 export default function PersonalInfo({ onComplete, onBack }: PersonalInfoProps) {
   const [data, setData] = useState<UserData>({ age: '', qualification: '' });
+  const { t } = useLanguage();
 
   const isComplete = data.age && data.qualification;
 
@@ -29,22 +31,22 @@ export default function PersonalInfo({ onComplete, onBack }: PersonalInfoProps) 
             <UserCircle size={32} />
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-[#001e40] tracking-tight mb-3 font-headline">
-            Final Step: About You
+            {t('personalInfo.title')}
           </h1>
           <p className="text-slate-500 leading-relaxed max-w-md mx-auto">
-            Help us calibrate our recommendations to suit your academic background and journey.
+            {t('personalInfo.subtitle')}
           </p>
         </header>
 
         <form className="space-y-8" onSubmit={(e) => { e.preventDefault(); onComplete(data); }}>
           <div className="space-y-2">
             <label className="block text-sm font-bold text-[#001e40] tracking-tight" htmlFor="age">
-              Age
+              {t('personalInfo.age')}
             </label>
             <input
               type="number"
               id="age"
-              placeholder="e.g. 18"
+              placeholder={t('personalInfo.agePlaceholder')}
               value={data.age}
               onChange={(e) => setData({ ...data, age: e.target.value })}
               className="w-full bg-slate-50 border-slate-100 rounded-lg px-5 py-4 focus:ring-2 focus:ring-blue-900/20 focus:border-[#001e40] text-slate-900 transition-all duration-300 outline-none"
@@ -54,7 +56,7 @@ export default function PersonalInfo({ onComplete, onBack }: PersonalInfoProps) 
 
           <div className="space-y-2">
             <label className="block text-sm font-bold text-[#001e40] tracking-tight" htmlFor="qualification">
-              Qualification
+              {t('personalInfo.qualification')}
             </label>
             <select
               id="qualification"
@@ -63,9 +65,9 @@ export default function PersonalInfo({ onComplete, onBack }: PersonalInfoProps) 
               className="w-full bg-slate-50 border-slate-100 rounded-lg px-5 py-4 focus:ring-2 focus:ring-blue-900/20 focus:border-[#001e40] text-slate-900 transition-all duration-300 outline-none appearance-none"
               required
             >
-              <option value="" disabled>Select your current qualification</option>
-              {qualifications.map((q) => (
-                <option key={q} value={q}>{q}</option>
+              <option value="" disabled>{t('personalInfo.qualificationPlaceholder')}</option>
+              {qualificationsList.map((q) => (
+                <option key={q} value={q}>{t(`personalInfo.qualifications.${q}`)}</option>
               ))}
             </select>
           </div>
@@ -80,7 +82,7 @@ export default function PersonalInfo({ onComplete, onBack }: PersonalInfoProps) 
                   : 'bg-slate-200 text-slate-400 cursor-not-allowed'
               }`}
             >
-              See My Recommendations
+              {t('personalInfo.submit')}
             </button>
             <button
               type="button"
@@ -88,7 +90,7 @@ export default function PersonalInfo({ onComplete, onBack }: PersonalInfoProps) 
               className="flex items-center justify-center gap-2 text-slate-500 font-semibold text-sm hover:text-[#001e40] transition-colors py-2 group"
             >
               <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-              Back to Assessment
+              {t('personalInfo.back')}
             </button>
           </div>
         </form>
