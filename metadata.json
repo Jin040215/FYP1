@@ -1,0 +1,5 @@
+{
+  "name": "UTS Course Recommendation System",
+  "description": "A personality trait-based system to assist school leavers in selecting suitable university programmes at UTS using the Big Five model.",
+  "requestFramePermissions": []
+}
